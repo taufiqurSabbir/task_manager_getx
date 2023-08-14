@@ -4,9 +4,8 @@ import 'package:task_managment/UI/screens/buttom_navigation.dart';
 import 'package:task_managment/UI/utils/asset_utils.dart';
 import 'package:task_managment/UI/widget/screen_background.dart';
 import 'package:task_managment/data/model/auth_utility.dart';
-
 import 'auth/loginScreen.dart';
-
+import 'package:get/get.dart';
 
 
 class Splash_screen extends StatefulWidget {
@@ -31,13 +30,24 @@ class _Splash_screenState extends State<Splash_screen> {
 
     Future.delayed(const Duration(seconds: 3)).then((_) async {
       final islogin= await AuthUtlity.checkuserlogin();
+
+      //get navigation
       if(mounted){
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (context) => islogin ?  Buttom_nav() : const Login()),
-            (route) => false);
+        Get.offAll(()=>islogin ?  Buttom_nav() : const Login());
       }
+
+
+
+
+      // if(mounted){
+      //   Navigator.pushAndRemoveUntil(
+      //       context,
+      //       MaterialPageRoute(
+      //           builder: (context) => islogin ?  Buttom_nav() : const Login()),
+      //       (route) => false);
+      // }
+
+
     });
 
   }

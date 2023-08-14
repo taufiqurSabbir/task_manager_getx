@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:task_managment/UI/screens/buttom_navigation.dart';
+
 import 'package:task_managment/UI/widget/screen_background.dart';
-import 'package:task_managment/data/model/auth_utility.dart';
-import 'package:task_managment/data/model/login_model.dart';
-import 'package:task_managment/data/model/network_response.dart';
-import 'package:task_managment/data/services/network_caller.dart';
-import 'package:task_managment/data/utils/urls.dart';
+
+import '../../state_manager/login_controller.dart';
 import 'SignUp_screen.dart';
 import 'email_varification_screen.dart';
+import 'package:get/get.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -22,35 +21,7 @@ class _LoginState extends State<Login> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  bool isloginprogress = false;
 
-  Future<void> login() async {
-    Map<String, dynamic> request_body = {
-      "email": _emailController.text.trim(),
-      "password": _passwordController.text,
-    };
-    isloginprogress=true;
-
-    final NetworkResponse response =
-        await NetworkCaller().postrequest(Urls.login, request_body);
-    isloginprogress=false;
-
-    if (response.isSuccess) {
-      login_model model = login_model.fromJson(response.body!);
-      await AuthUtlity.saveUserInfo(model);
-      if(mounted){
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => Buttom_nav()),
-            (route) => false);
-      }
-    } else {
-      if(mounted){
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Incorrect Email or password')));
-      }
-    }
-  }
 
   final GlobalKey<FormState> _formLogin = GlobalKey<FormState>();
   @override
@@ -117,22 +88,33 @@ class _LoginState extends State<Login> {
                   SizedBox(
                     height: 15,
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Visibility(
-                      visible: isloginprogress ==false,
-                      replacement: Center(child: CircularProgressIndicator()),
-                      child: ElevatedButton(
-                          onPressed: () {
-                            if (!_formLogin.currentState!.validate()) {
-                              return;
-                            }
-                            login();
-                            // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Buttom_nav()), (route) => false);
-                          },
-                          child: const Icon(Icons.arrow_forward_ios_sharp)),
-                    ),
-                  ),
+                  GetBuilder<loginController>(builder: (LoginController) {
+                    return SizedBox(
+                      width: double.infinity,
+                      child: Visibility(
+                        visible: LoginController.isloginprogress == false,
+                        replacement: Center(child: CircularProgressIndicator()),
+                        child: ElevatedButton(
+                            onPressed: () async {
+                              if (!_formLogin.currentState!.validate()) {
+                                return;
+                              }
+                              LoginController.login(
+                                  _emailController.text.trim(),
+                                  _passwordController.text).then((value){
+                                    if(value ==true){
+                                      Get.offAll(Buttom_nav());
+                                    }else{
+                                      Get.snackbar('Field', 'Email or password incorrect');
+                                    }
+                              });
+
+                              // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Buttom_nav()), (route) => false);
+                            },
+                            child: const Icon(Icons.arrow_forward_ios_sharp)),
+                      ),
+                    );
+                  }),
                   Center(
                     child: Padding(
                       padding: const EdgeInsets.only(top: 18),
