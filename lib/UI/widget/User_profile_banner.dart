@@ -19,8 +19,6 @@ class User_profile_banner extends StatefulWidget {
   State<User_profile_banner> createState() => _User_profile_bannerState();
 }
 
-
-
 class _User_profile_bannerState extends State<User_profile_banner> {
   @override
   Widget build(BuildContext context) {
@@ -40,18 +38,21 @@ class _User_profile_bannerState extends State<User_profile_banner> {
             ),
             radius: 27,
             onBackgroundImageError: (_, __) {
-              Icon(Icons.no_accounts);
+              Image.network(
+                  'https://media.istockphoto.com/id/1270067126/photo/smiling-indian-man-looking-at-camera.jpg?s=612x612&w=0&k=20&c=ovIQ5GPurLd3mOUj82jB9v-bjGZ8updgy1ACaHMeEC0=');
             },
-
             child: ClipOval(
-          child:  AuthUtlity.userInfo.data?.photo != null
-          ?  Image.memory(
-              base64Decode(AuthUtlity.userInfo.data!.photo!),
-          fit: BoxFit.cover,
-        )
-              : Image.network(
-          'https://t4.ftcdn.net/jpg/01/86/29/31/360_F_186293166_P4yk3uXQBDapbDFlR17ivpM6B1ux0fHG.jpg'),
-    ),
+              child: AuthUtlity.userInfo.data?.photo != null
+                  ? Image.memory(
+                      base64Decode(AuthUtlity.userInfo.data!.photo!),
+                      fit: BoxFit.cover,
+                height: double.infinity,
+                width: double.infinity,
+                    )
+                  : Image.network(
+                      'https://t4.ftcdn.net/jpg/01/86/29/31/360_F_186293166_P4yk3uXQBDapbDFlR17ivpM6B1ux0fHG.jpg'),
+
+            ),
           ),
           title: Text(
             '${AuthUtlity.userInfo.data?.firstName} ${AuthUtlity.userInfo.data?.lastName}',
@@ -62,17 +63,23 @@ class _User_profile_bannerState extends State<User_profile_banner> {
             '${AuthUtlity.userInfo.data?.email}',
             style: TextStyle(color: Colors.white, fontSize: 12),
           ),
-          trailing:  IconButton(onPressed: () async {
-           await AuthUtlity.clearInfo();
-           if(mounted){
+          trailing: IconButton(
+              onPressed: () async {
+                await AuthUtlity.clearInfo();
+                if (mounted) {
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => const Login()),
                       (route) => false);
 
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Logout Successful')));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Logout Successful')));
                 }
-              }, icon: const Icon(Icons.login,color: Colors.white,)),
+              },
+              icon: const Icon(
+                Icons.login,
+                color: Colors.white,
+              )),
         ),
       ),
     );
