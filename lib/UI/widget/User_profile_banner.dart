@@ -6,6 +6,7 @@ import 'package:task_managment/data/model/login_model.dart';
 
 import '../../data/model/auth_utility.dart';
 import '../screens/auth/loginScreen.dart';
+import 'package:get/get.dart';
 
 class User_profile_banner extends StatefulWidget {
   // final login_model data;
@@ -26,8 +27,7 @@ class _User_profile_bannerState extends State<User_profile_banner> {
       color: Colors.blueAccent,
       child: InkWell(
         onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => update_profile()));
+          Get.to(update_profile());
         },
         child: ListTile(
           contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),

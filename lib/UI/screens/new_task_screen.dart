@@ -62,17 +62,19 @@ class _new_taskState extends State<new_task> {
                                 onUpdate: () {
                                   taskcount.task_count();
                                 })),
-                        Expanded(
-                            child: Task_Summary(
-                                number: taskcount.cancle.toString(),
-                                title: 'Cancel',
-                                onUpdate: () {
-                                  taskcount.task_count();
-                                })),
+
                         Expanded(
                             child: Task_Summary(
                                 number: taskcount.completed.toString(),
                                 title: 'Completed',
+                                onUpdate: () {
+                                  taskcount.task_count();
+                                })),
+
+                        Expanded(
+                            child: Task_Summary(
+                                number: taskcount.cancle.toString(),
+                                title: 'Cancel',
                                 onUpdate: () {
                                   taskcount.task_count();
                                 })),
