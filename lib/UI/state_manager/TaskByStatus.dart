@@ -6,18 +6,20 @@ import '../../data/model/network_response.dart';
 import '../../data/services/network_caller.dart';
 import '../../data/utils/urls.dart';
 
-class NewTaskController extends GetxController{
+class TaskByStatus extends GetxController{
   List<dynamic> tasksData = [];
   bool isloading = false;
 
-  Future<void> Newtask() async {
+  Future<void> TaskController(String link) async {
     isloading = true;
    update();
-    NetworkResponse response = await NetworkCaller().getrequest(Urls.new_list);
+    NetworkResponse response = await NetworkCaller().getrequest(link);
     isloading = false;
     update();
 
     if (response.isSuccess) {
+      isloading = false;
+      update();
         tasksData = response.body!['data'];
       update();
     } else {

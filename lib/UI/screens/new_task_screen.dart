@@ -2,7 +2,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:task_managment/UI/screens/add_new_task.dart';
-import 'package:task_managment/UI/state_manager/new_task.dart';
+import 'package:task_managment/UI/state_manager/TaskByStatus.dart';
 import 'package:task_managment/data/model/network_response.dart';
 import 'package:task_managment/data/services/network_caller.dart';
 import '../../data/utils/urls.dart';
@@ -20,16 +20,15 @@ class new_task extends StatefulWidget {
 
 class _new_taskState extends State<new_task> {
 
-  final NewTaskController newtaskcontrol = Get.put(NewTaskController());
-  bool isloading=false;
+  final TaskByStatus taskcontroler = Get.put(TaskByStatus());
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       task_status();
-      newtaskcontrol.Newtask();
+      taskcontroler.TaskController(Urls.new_list);
     });
-    newtaskcontrol.Newtask();
+    taskcontroler.TaskController(Urls.new_list);
     task_status();
     super.initState();
   }
@@ -51,10 +50,10 @@ class _new_taskState extends State<new_task> {
   int? completed;
 
   Future<int?> new_task_count() async {
-    isloading = true;
+
     setState(() {});
     NetworkResponse response = await NetworkCaller().getrequest(Urls.new_list);
-    isloading = false;
+
     setState(() {});
     List<dynamic> items = [];
     if (response.isSuccess) {
@@ -147,51 +146,54 @@ class _new_taskState extends State<new_task> {
                   ],
                 ),
               ),
-              isloading
-                  ? const CircularProgressIndicator()
-                  : Expanded(
-                      child: RefreshIndicator(
-                        onRefresh: () async {
-                          setState(() {
-                            task_status();
-                            newtaskcontrol.Newtask();
-                          });
-                        },
-                        child: newtaskcontrol.tasksData.length != 0
-                            ? ListView.separated(
-                                itemCount: newtaskcontrol.tasksData.length,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: EdgeInsets.all(10.0),
-                                    child: Task_list(
-                                      title: newtaskcontrol.tasksData[index]['title'],
-                                      description: newtaskcontrol.tasksData[index]
-                                          ['description'],
-                                      date: newtaskcontrol.tasksData[index]['createdDate'],
-                                      id: newtaskcontrol.tasksData[index]['_id'],
-                                      colour: Colors.blueAccent,
-                                      status_name: 'New',
-                                      onUpdate: () {
-                                        newtaskcontrol.Newtask();
-                                        task_status();
-                                      },
-                                    ),
-                                  );
-                                },
-                                separatorBuilder:
-                                    (BuildContext context, int index) {
-                                  return const Divider(
-                                    height: 4,
-                                  );
-                                },
-                              )
-                            : Center(
-                                child: Image.asset(
+              GetBuilder<TaskByStatus>(
+                  builder: (taskcontroler) {
+                    return Expanded(
+                        child: taskcontroler.isloading
+                            ? Center(child: CircularProgressIndicator())
+                            :  RefreshIndicator(
+                          onRefresh: () async {
+                            setState(() {
+                              taskcontroler.TaskController(Urls.new_list);
+                            });
+                          },
+                          child: taskcontroler.tasksData.length != 0
+                              ? ListView.separated(
+                            itemCount: taskcontroler.tasksData.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Task_list(
+                                  title: taskcontroler.tasksData[index]['title'],
+                                  description: taskcontroler.tasksData[index]
+                                  ['description'],
+                                  date: taskcontroler.tasksData[index]['createdDate'],
+                                  id: taskcontroler.tasksData[index]['_id'],
+                                  colour: Colors.blueAccent,
+                                  status_name: 'New',
+                                  onUpdate: () {
+                                    taskcontroler.TaskController(Urls.Progress);
+                                  },
+                                ),
+                              );
+                            },
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                              return const Divider(
+                                height: 4,
+                              );
+                            },
+                          )
+                              : Center(
+                              child: Image.asset(
                                 'asset/images/nod.png',
                                 width: 280,
                               )),
-                      ),
-                    )
+                        )
+
+                    );
+                  }
+              )
             ],
           ),
         ),
