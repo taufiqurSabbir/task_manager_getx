@@ -1,11 +1,8 @@
-import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
-import 'package:task_managment/data/model/network_response.dart';
-import 'package:task_managment/data/services/network_caller.dart';
-import 'package:task_managment/data/utils/urls.dart';
-
+import 'package:task_managment/UI/state_manager/sign_upController.dart';
 import '../../widget/screen_background.dart';
 import 'loginScreen.dart';
+import 'package:get/get.dart';
 
 class signup extends StatefulWidget {
   const signup({Key? key}) : super(key: key);
@@ -24,51 +21,6 @@ class _signupState extends State<signup> {
   final TextEditingController _passwordcontroller = TextEditingController();
 
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
-
-  bool _signupinprogress = false;
-
-  Future<void> userSignUp() async {
-    _signupinprogress=true;
-    if(mounted){
-      setState(() {
-
-      });
-    }
-    final NetworkResponse response =
-        await NetworkCaller().postrequest(Urls.registation, <String, dynamic>{
-      "email": _emailcontroller.text.trim(),
-      "firstName": _first_namecontroller.text.trim(),
-      "lastName": _last_namecontroller.text.trim(),
-      "mobile": _mobilecontroller.text.trim(),
-      "password": _passwordcontroller.text,
-      "photo": "",
-    });
-    _signupinprogress=false;
-    if(mounted){
-      setState(() {});
-    }
-
-    if (response.isSuccess) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Registration Successfully')));
-      }
-      _emailcontroller.clear();
-      _first_namecontroller.clear();
-      _last_namecontroller.clear();
-      _mobilecontroller.clear();
-      _passwordcontroller.clear();
-
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
-    } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Registration failed')));
-      }
-    }
-    print(response.body);
-
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -177,22 +129,40 @@ class _signupState extends State<signup> {
                   SizedBox(
                     height: 15,
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Visibility(
-                      visible: _signupinprogress==false,
-                      replacement:  const Center(child: CircularProgressIndicator()),
-                      child: ElevatedButton(
-                          onPressed: () {
-                            if (!formkey.currentState!.validate()) {
-                             return;
-                            }
-                            userSignUp();
-
-                          },
-                          child: const Icon(Icons.arrow_forward_ios_sharp)),
-                    ),
-                  ),
+                  GetBuilder<SignUpController>(builder: (SignUpController) {
+                    return SizedBox(
+                      width: double.infinity,
+                      child: Visibility(
+                        visible: SignUpController.signupinprogress == false,
+                        replacement:
+                            const Center(child: CircularProgressIndicator()),
+                        child: ElevatedButton(
+                            onPressed: () {
+                              if (!formkey.currentState!.validate()) {
+                                return;
+                              }
+                              SignUpController.userSignUp(
+                                      _emailcontroller.text.trim(),
+                                      _first_namecontroller.text.trim(),
+                                      _last_namecontroller.text.trim(),
+                                      _mobilecontroller.text.trim(),
+                                      _passwordcontroller.text,
+                                      '')
+                                  .then((value) {
+                                if (value == 'true') {
+                                  Get.snackbar('Field',
+                                      'Something Wrong please try again');
+                                } else {
+                                  Get.to(const Login());
+                                  Get.snackbar('Success',
+                                      'Signup Succsfull please login here');
+                                }
+                              });
+                            },
+                            child: const Icon(Icons.arrow_forward_ios_sharp)),
+                      ),
+                    );
+                  }),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
