@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_managment/UI/screens/splash_screen.dart';
+import 'package:task_managment/UI/state_manager/StatusChange.dart';
 import 'package:task_managment/UI/state_manager/add_new_task.dart';
 import 'package:task_managment/UI/state_manager/login_controller.dart';
 import 'package:task_managment/UI/state_manager/TaskByStatus.dart';
 import 'package:task_managment/UI/state_manager/sign_upController.dart';
+import 'package:task_managment/UI/state_manager/task_count.dart';
 
 class TaskManager extends StatefulWidget {
   static GlobalKey<ScaffoldState> globalKey =GlobalKey();
@@ -99,6 +101,8 @@ class ControllerBinding extends Bindings{
     Get.put(SignUpController());
     Get.put(AddTaskController());
     Get.put(TaskByStatus());
+    Get.put(taskcountController());
+    Get.put(StatusController());
   }
 
 }

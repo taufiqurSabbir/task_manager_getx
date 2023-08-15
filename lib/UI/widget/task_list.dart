@@ -3,10 +3,12 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:task_managment/UI/screens/buttom_navigation.dart';
+import 'package:task_managment/UI/state_manager/StatusChange.dart';
 import 'package:task_managment/data/model/network_response.dart';
 import 'package:task_managment/data/services/network_caller.dart';
 
 import '../../data/utils/urls.dart';
+import 'package:get/get.dart';
 
 class Task_list extends StatefulWidget {
   Task_list({
@@ -23,12 +25,14 @@ class Task_list extends StatefulWidget {
   final colour;
   final VoidCallback onUpdate;
 
+  final StatusController statusController = Get.put(StatusController());
+
   @override
   State<Task_list> createState() => _Task_listState();
 }
 
 class _Task_listState extends State<Task_list> {
-  bool isloding = false;
+
   var items = [
     'New',
     'Progress',
@@ -36,35 +40,11 @@ class _Task_listState extends State<Task_list> {
     'Cancelled',
   ];
 
-
+  bool isloding = false;
   @override
   Widget build(BuildContext context) {
-    Future<void> Statuschage($status) async {
-      log(widget.id.toString());
-      String status_url =
-          '${Urls.baseurl}/updateTaskStatus/${widget.id}/${$status}';
-      isloding = true;
-      setState(() {});
-      final NetworkResponse response =
-          await NetworkCaller().getrequest(status_url);
-      isloding = false;
-      setState(() {});
-      if (response.isSuccess) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Task Status Updated')));
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => Buttom_nav(),
-                  settings: RouteSettings(arguments: 0)),
-              (route) => false);
-        }
-        log(response.body.toString());
-      } else {
-        log(response.body.toString());
-      }
-    }
+
+
 
     Future<void> delete_task($id) async {
       String delate_url = '${Urls.baseurl}/deleteTask/${widget.id}';
@@ -107,19 +87,26 @@ class _Task_listState extends State<Task_list> {
                         backgroundColor: widget.colour,
                       ),
                       Spacer(),
-                      DropdownButton<String>(
-                        value: dropdownvalue,
-                        items: items.map((String item) {
-                          return DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(item),
+                      GetBuilder<StatusController>(
+                        builder: (statusController) {
+                          return DropdownButton<String>(
+                            value: dropdownvalue,
+                            items: items.map((String item) {
+                              return DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(item),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              statusController.Statuschage(newValue!,widget.id).then((result){
+                                if(result == true){
+                                  Get.offAll(Buttom_nav());
+                                }
+                              });
+                            },
+                            icon: Icon(Icons.edit, color: Colors.blueAccent),
                           );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-
-                          Statuschage(newValue);
-                        },
-                        icon: Icon(Icons.edit, color: Colors.blueAccent),
+                        }
                       ),
                       IconButton(
                         onPressed: () {
