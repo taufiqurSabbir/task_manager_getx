@@ -10,6 +10,8 @@ import 'package:task_managment/data/services/network_caller.dart';
 import '../../data/utils/urls.dart';
 import 'package:get/get.dart';
 
+import '../state_manager/deletetask.dart';
+
 class Task_list extends StatefulWidget {
   Task_list({
     required this.title,
@@ -27,6 +29,7 @@ class Task_list extends StatefulWidget {
 
   final StatusController statusController = Get.put(StatusController());
 
+
   @override
   State<Task_list> createState() => _Task_listState();
 }
@@ -39,29 +42,20 @@ class _Task_listState extends State<Task_list> {
     'Completed',
     'Cancelled',
   ];
-
-  bool isloding = false;
+  final Delete_task delete_task = Get.put(Delete_task());
   @override
   Widget build(BuildContext context) {
 
 
 
-    Future<void> delete_task($id) async {
-      String delate_url = '${Urls.baseurl}/deleteTask/${widget.id}';
-      isloding = true;
-      setState(() {
-      });
-      NetworkResponse response = await NetworkCaller().getrequest(delate_url);
-      isloding = false;
-      log(response.body.toString());
-    }
+
 
     String dropdownvalue = widget.status_name;
     return Container(
       color: Colors.white,
-      child: isloding
-          ? Center(child: CircularProgressIndicator())
-          : ListTile(
+      child:
+
+           ListTile(
               onLongPress: () {
                 setState(() {
                 });
@@ -130,7 +124,7 @@ class _Task_listState extends State<Task_list> {
                                         child: Text('Cancle')),
                                     TextButton(
                                         onPressed: () {
-                                          delete_task(widget.id);
+                                          delete_task.delete_task(widget.id);
                                           setState(() {});
                                           Navigator.pushAndRemoveUntil(
                                               context,

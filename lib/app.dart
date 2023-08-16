@@ -10,6 +10,7 @@ import 'package:task_managment/UI/state_manager/sign_upController.dart';
 import 'package:task_managment/UI/state_manager/task_count.dart';
 import 'package:task_managment/UI/state_manager/updateprofile.dart';
 
+import 'UI/state_manager/deletetask.dart';
 import 'UI/state_manager/email_varification.dart';
 import 'UI/state_manager/passwordChange.dart';
 
@@ -112,6 +113,7 @@ class ControllerBinding extends Bindings{
     Get.put(EmailVarification());
     Get.put(otp_varification());
     Get.put(passwordChange());
+    Get.put(Delete_task());
   }
 
 }
