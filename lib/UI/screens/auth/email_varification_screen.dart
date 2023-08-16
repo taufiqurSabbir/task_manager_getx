@@ -1,12 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:task_managment/UI/screens/auth/OTP_varification.dart';
 import 'package:task_managment/UI/widget/screen_background.dart';
-import 'package:task_managment/data/model/network_response.dart';
-import 'package:task_managment/data/services/network_caller.dart';
-import 'package:task_managment/data/utils/urls.dart';
+import 'package:get/get.dart';
 
-import 'OTP_varification.dart';
+import '../../state_manager/email_varification.dart';
+
 
 class email_varification extends StatefulWidget {
   const email_varification({Key? key}) : super(key: key);
@@ -21,38 +19,7 @@ class _email_varificationState extends State<email_varification> {
 
   TextEditingController _emailcontroller = TextEditingController();
 
-
-  Future<void>email_send()async {
-      NetworkResponse response = await NetworkCaller().getrequest(Urls.forgetpass+_emailcontroller.text.trim());
-
-      if(response.body?['status']=='success'){
-        if(mounted){
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    OTP_varification(email: _emailcontroller.text.trim())));
-      }
-      log(response.body.toString());
-      }else{
-        if(mounted){
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: const Text('Warning'),
-                  content: Text(response.body?['data']),
-              actions: [
-                TextButton(onPressed: (){
-                  Navigator.pop(context);
-                }, child: const Text('Okay'))
-              ],
-                ));
-
-      }
-      log(response.body.toString());
-      }
-  }
-
+ final EmailVarification emailvarification = Get.put(EmailVarification());
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +82,14 @@ class _email_varificationState extends State<email_varification> {
                          if(!_formstate.currentState!.validate()){
                            return;
                          }
-                         email_send();
+                         emailvarification.email_send(_emailcontroller.text.trim()).then((result){
+                           if(result==true){
+                             Get.offAll(()=>OTP_varification(email: _emailcontroller.text.trim()));
+                             Get.snackbar('Success', 'OTP sent to your email..! please check');
+                           }else{
+                             Get.snackbar('Failed', 'User Not find');
+                           }
+                         });
                         },
                         child: const Icon(Icons.arrow_forward_ios_sharp)),
                   ),

@@ -103,9 +103,9 @@ class _LoginState extends State<Login> {
                                   _emailController.text.trim(),
                                   _passwordController.text).then((value){
                                     if(value ==true){
-                                      Get.offAll(Buttom_nav());
+                                      Get.offAll(()=>Buttom_nav());
                                     }else{
-                                      Get.snackbar('Field', 'Email or password incorrect');
+                                      Get.snackbar('Failed', 'Email or password incorrect');
                                     }
                               });
 

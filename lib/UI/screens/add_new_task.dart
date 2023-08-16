@@ -27,7 +27,7 @@ class _add_new_taskState extends State<add_new_task> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              User_profile_banner(),
+              const User_profile_banner(),
               Padding(
                 padding: const EdgeInsets.all(25.0),
                 child: Form(
@@ -35,7 +35,7 @@ class _add_new_taskState extends State<add_new_task> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 25,
                       ),
                       Text(
@@ -52,7 +52,7 @@ class _add_new_taskState extends State<add_new_task> {
                           }
                         },
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 14,
                       ),
                       TextFormField(
@@ -74,7 +74,7 @@ class _add_new_taskState extends State<add_new_task> {
                           child: Visibility(
                             visible: AddTaskController.isprogreess == false,
                             replacement:
-                                Center(child: CircularProgressIndicator()),
+                                const Center(child: CircularProgressIndicator()),
                             child: ElevatedButton(
                                 onPressed: () {
                                   if (!_add_task.currentState!.validate()) {
@@ -85,7 +85,7 @@ class _add_new_taskState extends State<add_new_task> {
                                           _descriptionController.text.trim())
                                       .then((result) {
                                     if (result == true) {
-                                      Get.to(Buttom_nav());
+                                      Get.to(()=>const Buttom_nav());
                                       Get.snackbar(
                                           'Success', 'Task added successful');
                                     } else {

@@ -153,7 +153,7 @@ class _signupState extends State<signup> {
                                   Get.snackbar('Field',
                                       'Something Wrong please try again');
                                 } else {
-                                  Get.to(const Login());
+                                  Get.to(()=>const Login());
                                   Get.snackbar('Success',
                                       'Signup Succsfull please login here');
                                 }

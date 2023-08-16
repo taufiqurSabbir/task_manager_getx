@@ -6,22 +6,23 @@ import '../../data/model/network_response.dart';
 import '../../data/services/network_caller.dart';
 import '../../data/utils/urls.dart';
 
-class taskcountController extends GetxController{
-
+class taskcountController extends GetxController {
   int? new_count;
   int? progress;
   int? cancle;
   int? completed;
 
-  Future<int?>task_count() async {
+  Future<int?> task_count() async {
     NetworkResponse newtask = await NetworkCaller().getrequest(Urls.new_list);
-    NetworkResponse progress_task = await NetworkCaller().getrequest(Urls.Progress);
-    NetworkResponse cancle_task = await NetworkCaller().getrequest(Urls.cancled);
-    NetworkResponse completed_task = await NetworkCaller().getrequest(Urls.completed);
+    NetworkResponse progress_task =
+        await NetworkCaller().getrequest(Urls.Progress);
+    NetworkResponse cancle_task =
+        await NetworkCaller().getrequest(Urls.cancled);
+    NetworkResponse completed_task =
+        await NetworkCaller().getrequest(Urls.completed);
     update();
 
     List<dynamic> items = [];
-
 
     if (newtask.isSuccess) {
       items = newtask.body!['data'];
@@ -54,5 +55,4 @@ class taskcountController extends GetxController{
     update();
     print(new_count);
   }
-
 }

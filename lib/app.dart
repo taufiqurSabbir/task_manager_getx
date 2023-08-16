@@ -5,9 +5,13 @@ import 'package:task_managment/UI/state_manager/StatusChange.dart';
 import 'package:task_managment/UI/state_manager/add_new_task.dart';
 import 'package:task_managment/UI/state_manager/login_controller.dart';
 import 'package:task_managment/UI/state_manager/TaskByStatus.dart';
+import 'package:task_managment/UI/state_manager/otp_varification.dart';
 import 'package:task_managment/UI/state_manager/sign_upController.dart';
 import 'package:task_managment/UI/state_manager/task_count.dart';
 import 'package:task_managment/UI/state_manager/updateprofile.dart';
+
+import 'UI/state_manager/email_varification.dart';
+import 'UI/state_manager/passwordChange.dart';
 
 class TaskManager extends StatefulWidget {
   static GlobalKey<ScaffoldState> globalKey =GlobalKey();
@@ -105,6 +109,9 @@ class ControllerBinding extends Bindings{
     Get.put(taskcountController());
     Get.put(StatusController());
     Get.put(UpdateProfileController());
+    Get.put(EmailVarification());
+    Get.put(otp_varification());
+    Get.put(passwordChange());
   }
 
 }

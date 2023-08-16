@@ -7,12 +7,12 @@ import '../../data/model/login_model.dart';
 import '../../data/model/network_response.dart';
 import '../../data/services/network_caller.dart';
 import '../../data/utils/urls.dart';
+
 UserData userData = AuthUtlity.userInfo.data!;
 
-class UpdateProfileController extends GetxController{
-
-
-  Future<bool> updateprofile(String email,String firstname,String lastname,String mobile,String photo) async {
+class UpdateProfileController extends GetxController {
+  Future<bool> updateprofile(String email, String firstname, String lastname,
+      String mobile, String photo) async {
     NetworkResponse response = await NetworkCaller()
         .postrequest(Urls.profile_update, <String, dynamic>{
       "email": email,
@@ -29,9 +29,8 @@ class UpdateProfileController extends GetxController{
       userData.mobile = mobile;
       userData.photo = photo;
       AuthUtlity.updateUserInfo(userData);
-     update();
-     return true;
-
+      update();
+      return true;
     } else {
       log(response.statusCode.toString());
       return false;

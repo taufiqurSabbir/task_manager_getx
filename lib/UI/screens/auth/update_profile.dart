@@ -80,7 +80,7 @@ class _update_profileState extends State<update_profile> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              User_profile_banner(),
+              const User_profile_banner(),
               Padding(
                 padding: const EdgeInsets.all(30.0),
                 child: Form(
@@ -122,7 +122,7 @@ class _update_profileState extends State<update_profile> {
                               ),
                               Row(
                                 children: [
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 210,
                                   ),
                                   Padding(
@@ -135,25 +135,25 @@ class _update_profileState extends State<update_profile> {
                                             onPressed: () {
                                               imagepick();
                                             },
-                                            icon: Icon(
+                                            icon: const Icon(
                                               Icons.edit,
                                               color: Colors.white,
                                             ))),
                                   ),
-                                  Spacer(
+                                  const Spacer(
                                     flex: 20,
                                   ),
                                 ],
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 22,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 22,
                           ),
                           TextFormField(
@@ -165,7 +165,7 @@ class _update_profileState extends State<update_profile> {
                             keyboardType: TextInputType.emailAddress,
                             decoration: const InputDecoration(hintText: 'Email'),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           TextFormField(
@@ -180,7 +180,7 @@ class _update_profileState extends State<update_profile> {
                               return null;
                             },
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           TextFormField(
@@ -195,7 +195,7 @@ class _update_profileState extends State<update_profile> {
                               return null;
                             },
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           TextFormField(
@@ -209,10 +209,10 @@ class _update_profileState extends State<update_profile> {
                               return null;
                             },
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           SizedBox(
@@ -231,7 +231,7 @@ class _update_profileState extends State<update_profile> {
                                   ).then((result){
                                     if(result==true){
                                       AuthUtlity.updateUserInfo(userData);
-                                      Get.to(Buttom_nav());
+                                      Get.to(()=>const Buttom_nav());
                                       Get.snackbar('Success', 'Profile Update Successful');
                                     }else{
                                       Get.snackbar('Field', 'Something wrong..! please try again');

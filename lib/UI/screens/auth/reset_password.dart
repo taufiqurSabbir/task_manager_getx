@@ -3,8 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:task_managment/data/model/network_response.dart';
 import 'package:task_managment/data/services/network_caller.dart';
-
+import 'package:get/get.dart';
 import '../../../data/utils/urls.dart';
+import '../../state_manager/passwordChange.dart';
 import '../../widget/screen_background.dart';
 import 'loginScreen.dart';
 
@@ -24,47 +25,7 @@ class _reset_passwordState extends State<reset_password> {
   final TextEditingController _password_confirmController =
       TextEditingController();
 
-  Future<void> setpassword() async {
-    if (_passwordController.text == _password_confirmController.text) {
-      print(widget.email);
-      print(widget.otp);
-      NetworkResponse response = await NetworkCaller()
-          .postrequest(Urls.password_change, <String, dynamic>{
-        "email": widget.email,
-        "OTP": widget.otp,
-        "password": _passwordController.text,
-      });
-
-      if (response.isSuccess) {
-        log(response.body.toString());
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Password Changed Successful')));
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => Login()),
-              (route) => false);
-        }
-      }else{
-        log(response.body.toString());
-      }
-    } else {
-      if (mounted) {
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: const Text('Warning'),
-                  content: const Text('Password not matched'),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Okay'))
-                  ],
-                ));
-      }
-    }
-  }
+  final passwordChange passchange = Get.put(passwordChange());
 
   @override
   Widget build(BuildContext context) {
@@ -168,8 +129,25 @@ class _reset_passwordState extends State<reset_password> {
                             if (!_password_form.currentState!.validate()) {
                               return;
                             }
-
-                            setpassword();
+                            if (_passwordController.text ==
+                                _password_confirmController.text) {
+                              passchange
+                                  .setpassword(widget.email, widget.otp,
+                                      _passwordController.text.trim())
+                                  .then((result) {
+                                if (result == true) {
+                                  Get.offAll(()=>const Login());
+                                  Get.snackbar(
+                                      'Successful', 'Password updated');
+                                } else {
+                                  Get.snackbar(
+                                      'Failed', 'Password Changed Successful');
+                                }
+                              });
+                            } else {
+                              Get.snackbar('Failed',
+                                  'Password not matched..! try again');
+                            }
                           },
                           child: const Text('Confirm')),
                     ),
